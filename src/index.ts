@@ -2,6 +2,7 @@ export {
   Waveform,
   type IWaveformRef,
   type PlaybackSpeedType,
+  type WaveFormLoadState,
 } from './components';
 export {
   FinishMode,
