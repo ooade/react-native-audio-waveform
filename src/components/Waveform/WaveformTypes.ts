@@ -19,6 +19,9 @@ export interface StaticWaveform extends BaseWaveform {
   mode: 'static';
   path: string;
   volume?: number;
+  showHandle?: boolean;
+  handleColor?: string;
+  handleExpandedHeight?: number;
   scrubColor?: string;
   onPlayerStateChange?: (playerState: PlayerState) => void;
   onPanStateChange?: (panMoving: boolean) => void;

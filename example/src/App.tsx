@@ -154,6 +154,7 @@ const RenderListItem = React.memo(
               containerStyle={styles.staticWaveformView}
               mode="static"
               key={item.path}
+              showHandle
               playbackSpeed={currentPlaybackSpeed}
               ref={ref}
               path={item.path}

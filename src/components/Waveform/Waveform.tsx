@@ -11,8 +11,10 @@ import React, {
   useState,
 } from 'react';
 import {
+  Animated,
   PanResponder,
   ScrollView,
+  TouchableOpacity,
   View,
   type LayoutRectangle,
   type NativeTouchEvent,
@@ -62,6 +64,9 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
     onError = (_error: Error) => {},
     onCurrentProgressChange = () => {},
     candleHeightScale = 3,
+    showHandle = false,
+    handleExpandedHeight = 60,
+    handleColor = '#000000',
     onChangeWaveformLoadState = (_state: boolean) => {},
   } = props as StaticWaveform & LiveWaveform;
   const viewRef = useRef<View>(null);
@@ -83,6 +88,44 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
   const [isWaveformExtracted, setWaveformExtracted] = useState(false);
   const audioSpeed: number =
     playbackSpeed > playbackSpeedThreshold ? 1.0 : playbackSpeed;
+
+  const scrubHandleWidthAnim = useRef(new Animated.Value(12)).current;
+  const scrubHandleHeightAnim = useRef(new Animated.Value(12)).current;
+
+  const expandSrubHandleWithAnim = () => {
+    Animated.parallel([
+      Animated.spring(scrubHandleWidthAnim, {
+        toValue: 8,
+        useNativeDriver: false,
+      }),
+      Animated.spring(scrubHandleHeightAnim, {
+        toValue: handleExpandedHeight,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  };
+
+  const immediatelyExpandScrubHandle = () => {
+    scrubHandleWidthAnim.setValue(8);
+    scrubHandleHeightAnim.setValue(handleExpandedHeight);
+  };
+  const immediatelyShrinkScrubHandle = () => {
+    scrubHandleWidthAnim.setValue(12);
+    scrubHandleHeightAnim.setValue(12);
+  };
+
+  const shrinkScrubHandleWithAnim = () => {
+    Animated.parallel([
+      Animated.spring(scrubHandleWidthAnim, {
+        toValue: 12,
+        useNativeDriver: false,
+      }),
+      Animated.spring(scrubHandleHeightAnim, {
+        toValue: 12,
+        useNativeDriver: false,
+      }),
+    ]).start();
+  };
 
   const {
     extractWaveformData,
@@ -589,6 +632,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
       onPanResponderStart: () => {},
       onPanResponderMove: event => {
         setSeekPosition(event.nativeEvent);
+        immediatelyExpandScrubHandle();
       },
       onPanResponderEnd: () => {
         (onPanStateChange as Function)(false);
@@ -598,6 +642,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
         setSeekPosition(e.nativeEvent);
         (onPanStateChange as Function)(false);
         setPanMoving(false);
+        immediatelyShrinkScrubHandle();
       },
     })
   ).current;
@@ -608,7 +653,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
     }
   }, [currentProgress, songDuration, onCurrentProgressChange]);
 
-  /* Ensure that the audio player is released (or stopped) once the song's duration is determined, 
+  /* Ensure that the audio player is released (or stopped) once the song's duration is determined,
   especially if the audio is not playing immediately after loading */
   useEffect(() => {
     if (
@@ -642,6 +687,25 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
         style={styles.waveformInnerContainer}
         onLayout={calculateLayout}
         {...(mode === 'static' ? panResponder.panHandlers : {})}>
+        {showHandle && (
+          <Animated.View
+            style={{
+              ...styles.handle,
+              width: scrubHandleWidthAnim,
+              height: scrubHandleHeightAnim,
+              backgroundColor: handleColor,
+              left: `${Math.min(97, (currentProgress / songDuration) * 100)}%`,
+            }}>
+            <TouchableOpacity
+              style={styles.touchableOpacity}
+              accessibilityRole="button"
+              accessibilityLabel="Scrubber handle"
+              onLongPress={() => expandSrubHandleWithAnim()}
+              onPressOut={() => shrinkScrubHandleWithAnim()}>
+              <View />
+            </TouchableOpacity>
+          </Animated.View>
+        )}
         <ScrollView
           horizontal
           ref={scrollRef}
