@@ -42,6 +42,7 @@ import {
   type IWaveformRef,
   type LiveWaveform,
   type StaticWaveform,
+  type WaveFormLoadState,
 } from './WaveformTypes';
 
 export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
@@ -67,7 +68,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
     showHandle = false,
     handleExpandedHeight = 60,
     handleColor = '#000000',
-    onChangeWaveformLoadState = (_state: boolean) => {},
+    onChangeWaveformLoadState = (_state: WaveFormLoadState) => {},
   } = props as StaticWaveform & LiveWaveform;
   const viewRef = useRef<View>(null);
   const scrollRef = useRef<ScrollView>(null);
@@ -225,13 +226,13 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
   const getAudioWaveFormForPath = async (noOfSample: number) => {
     if (!isNil(path) && !isEmpty(path)) {
       try {
-        onChangeWaveformLoadState(true);
+        onChangeWaveformLoadState('loading');
         const result = await extractWaveformData({
           path: path,
           playerKey: `PlayerFor${path}`,
           noOfSamples: Math.max(noOfSample, 1),
         });
-        onChangeWaveformLoadState(false);
+        onChangeWaveformLoadState('done');
 
         if (!isNil(result) && !isEmpty(result)) {
           const waveforms = head(result);
@@ -242,7 +243,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
           }
         }
       } catch (err) {
-        onChangeWaveformLoadState(false);
+        onChangeWaveformLoadState('error');
         onError(err as Error);
       }
     } else {

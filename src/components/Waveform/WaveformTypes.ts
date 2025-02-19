@@ -6,6 +6,8 @@ type StaticOrLive = 'static' | 'live';
 
 export type PlaybackSpeedType = 1.0 | 1.5 | 2.0;
 
+export type WaveFormLoadState = 'idle' | 'loading' | 'done' | 'error';
+
 interface BaseWaveform {
   candleSpace?: number;
   candleWidth?: number;
@@ -30,7 +32,7 @@ export interface StaticWaveform extends BaseWaveform {
     currentProgress: number,
     songDuration: number
   ) => void;
-  onChangeWaveformLoadState?: (state: boolean) => void;
+  onChangeWaveformLoadState?: (state: WaveFormLoadState) => void;
   playbackSpeed?: PlaybackSpeedType;
 }
 
