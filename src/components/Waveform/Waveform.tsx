@@ -707,30 +707,32 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
             </TouchableOpacity>
           </Animated.View>
         )}
-        <ScrollView
-          horizontal
-          ref={scrollRef}
-          style={styles.scrollContainer}
-          scrollEnabled={mode === 'live'}>
-          {waveform?.map?.((amplitude, indexCandle) => (
-            <WaveformCandle
-              key={indexCandle}
-              index={indexCandle}
-              amplitude={amplitude}
-              parentViewLayout={viewLayout}
-              {...{
-                candleWidth,
-                candleSpace,
-                noOfSamples,
-                songDuration,
-                currentProgress,
-                waveColor,
-                scrubColor,
-                candleHeightScale,
-              }}
-            />
-          ))}
-        </ScrollView>
+        {waveform.length > 0 && (
+          <ScrollView
+            horizontal
+            ref={scrollRef}
+            style={styles.scrollContainer}
+            scrollEnabled={mode === 'live'}>
+            {waveform?.map?.((amplitude, indexCandle) => (
+              <WaveformCandle
+                key={indexCandle}
+                index={indexCandle}
+                amplitude={amplitude}
+                parentViewLayout={viewLayout}
+                {...{
+                  candleWidth,
+                  candleSpace,
+                  noOfSamples,
+                  songDuration,
+                  currentProgress,
+                  waveColor,
+                  scrubColor,
+                  candleHeightScale,
+                }}
+              />
+            ))}
+          </ScrollView>
+        )}
       </View>
     </View>
   );
