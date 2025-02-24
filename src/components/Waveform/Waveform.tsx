@@ -105,14 +105,10 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
       }),
     ]).start();
   };
-
   const expandScrubHandle = () => {
     scrubHandleWidthAnim.setValue(4);
     scrubHandleHeightAnim.setValue(handleExpandedHeight - 4);
-  };
-  const shrinkScrubHandle = () => {
-    scrubHandleWidthAnim.setValue(8);
-    scrubHandleHeightAnim.setValue(8);
+    expandSrubHandleWithAnim();
   };
 
   const shrinkScrubHandleWithAnim = () => {
@@ -126,6 +122,11 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
         useNativeDriver: false,
       }),
     ]).start();
+  };
+  const shrinkScrubHandle = () => {
+    scrubHandleWidthAnim.setValue(8);
+    scrubHandleHeightAnim.setValue(8);
+    shrinkScrubHandleWithAnim();
   };
 
   const {
