@@ -106,13 +106,13 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
     ]).start();
   };
 
-  const immediatelyExpandScrubHandle = () => {
-    scrubHandleWidthAnim.setValue(8);
-    scrubHandleHeightAnim.setValue(handleExpandedHeight);
+  const expandScrubHandle = () => {
+    scrubHandleWidthAnim.setValue(4);
+    scrubHandleHeightAnim.setValue(handleExpandedHeight - 4);
   };
-  const immediatelyShrinkScrubHandle = () => {
-    scrubHandleWidthAnim.setValue(12);
-    scrubHandleHeightAnim.setValue(12);
+  const shrinkScrubHandle = () => {
+    scrubHandleWidthAnim.setValue(8);
+    scrubHandleHeightAnim.setValue(8);
   };
 
   const shrinkScrubHandleWithAnim = () => {
@@ -633,7 +633,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
       onPanResponderStart: () => {},
       onPanResponderMove: event => {
         setSeekPosition(event.nativeEvent);
-        immediatelyExpandScrubHandle();
+        expandScrubHandle();
       },
       onPanResponderEnd: () => {
         (onPanStateChange as Function)(false);
@@ -643,7 +643,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
         setSeekPosition(e.nativeEvent);
         (onPanStateChange as Function)(false);
         setPanMoving(false);
-        immediatelyShrinkScrubHandle();
+        shrinkScrubHandle();
       },
     })
   ).current;
