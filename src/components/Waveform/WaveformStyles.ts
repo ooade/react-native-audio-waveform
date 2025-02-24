@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
   handle: {
     borderRadius: 15,
     position: 'absolute',
-    marginLeft: -6,
+    marginLeft: -4,
     zIndex: 10,
   },
   touchableOpacity: {

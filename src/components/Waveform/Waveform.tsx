@@ -691,7 +691,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
               width: scrubHandleWidthAnim,
               height: scrubHandleHeightAnim,
               backgroundColor: handleColor,
-              left: `${Math.min(97, (currentProgress / songDuration) * 100)}%`,
+              left: `${Math.min(96, (currentProgress / songDuration) * 100)}%`,
             }}>
             <TouchableOpacity
               style={styles.touchableOpacity}
