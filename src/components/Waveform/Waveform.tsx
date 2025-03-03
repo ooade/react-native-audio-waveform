@@ -69,6 +69,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
     handleExpandedHeight = 60,
     handleColor = '#000000',
     onChangeWaveformLoadState = (_state: WaveFormLoadState) => {},
+    showsHorizontalScrollIndicator = false,
   } = props as StaticWaveform & LiveWaveform;
   const viewRef = useRef<View>(null);
   const scrollRef = useRef<ScrollView>(null);
@@ -706,6 +707,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
         {waveform.length > 0 && (
           <ScrollView
             horizontal
+            showsHorizontalScrollIndicator={showsHorizontalScrollIndicator}
             ref={scrollRef}
             style={styles.scrollContainer}
             scrollEnabled={mode === 'live'}>
