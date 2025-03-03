@@ -70,6 +70,7 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
     handleColor = '#000000',
     onChangeWaveformLoadState = (_state: WaveFormLoadState) => {},
     showsHorizontalScrollIndicator = false,
+    stopPlayerOnZeroProgress = false,
   } = props as StaticWaveform & LiveWaveform;
   const viewRef = useRef<View>(null);
   const scrollRef = useRef<ScrollView>(null);
@@ -594,14 +595,20 @@ export const Waveform = forwardRef<IWaveformRef, IWaveform>((props, ref) => {
         isAutoPaused.current = true;
       }
     } else {
-      if (playerState === PlayerState.paused && isAutoPaused.current) {
+      if (
+        stopPlayerOnZeroProgress &&
+        playerState === PlayerState.playing &&
+        currentProgress === 0
+      ) {
+        stopPlayerAction();
+      } else if (playerState === PlayerState.paused && isAutoPaused.current) {
         startPlayerAction();
       }
 
       isAutoPaused.current = false;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [panMoving]);
+  }, [panMoving, stopPlayerOnZeroProgress]);
 
   const calculateLayout = (): void => {
     viewRef.current?.measureInWindow((x, y, width, height) => {
