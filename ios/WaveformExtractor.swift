@@ -34,16 +34,22 @@ public class WaveformExtractor {
     }
 }
   init(url: URL, channel: AudioWaveform, resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) throws {
+
     do {
-      audioFile = try AVAudioFile(forReading: audioUrl)
-      result = resolve
-      self.flutterChannel = channel
-      print("Audio File Format: \(audioFile.fileFormat)")
-  } catch let error as NSError {
-      print("AVAudioFile error: \(error.localizedDescription)")
-      reject(Constants.audioWaveforms, "Failed to decode: \(error.localizedDescription)", error)
-      return
-  }
+        guard let audioFile = try? AVAudioFile(forReading: audioUrl) else {
+            print("Error: Failed to open audio file at \(audioUrl.path)")
+            reject(Constants.audioWaveforms, "Failed to open audio file", nil)
+            return
+        }
+         result = resolve
+        self.flutterChannel = channel
+
+        print("Audio File Format: \(audioFile.fileFormat)")
+    } catch let error as NSError {
+        print("AVAudioFile error: \(error.localizedDescription)")
+        reject(Constants.audioWaveforms, "Failed to decode: \(error.localizedDescription)", error)
+        return
+    }
   }
 
   deinit {
