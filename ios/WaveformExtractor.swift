@@ -34,18 +34,9 @@ public class WaveformExtractor {
     }
 }
   init(url: URL, channel: AudioWaveform, resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) throws {
-    do {
-      audioFile = try AVAudioFile(forReading: url)
-    } catch {
-      let nsError = error as NSError
-      if nsError.domain == NSURLErrorDomain && nsError.code == NSURLErrorFileDoesNotExist {
-        throw NSError(domain: "WaveformExtractorErrorDomain", code: 1001, userInfo: [NSLocalizedDescriptionKey: "File does not exist at the specified URL."])
-      } else if nsError.domain == AVFoundationErrorDomain && nsError.code == AVError.Code.formatUnsupported.rawValue {
-        throw NSError(domain: "WaveformExtractorErrorDomain", code: 1002, userInfo: [NSLocalizedDescriptionKey: "The audio file format is not supported."])
-      } else {
-        throw error
-      }
-    }
+    audioFile = try AVAudioFile(forReading: url)
+    print("File Path: \(url.path)")
+    print("File Exists: \(FileManager.default.fileExists(atPath: url.path))")
     result = resolve
     self.flutterChannel = channel
   }
