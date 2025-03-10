@@ -34,16 +34,16 @@ public class WaveformExtractor {
     }
 }
   init(url: URL, channel: AudioWaveform, resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) throws {
-    let file = try AVAudioFile(forReading: url)
-
-    guard file.processingFormat.commonFormat == .pcmFormatFloat32 else {
-        reject(Constants.audioWaveforms, "Unsupported audio format. Please use a WAV file.", nil)
-        throw NSError(domain: "WaveformExtractor", code: -1, userInfo: [NSLocalizedDescriptionKey: "Unsupported format"])
-    }
-
-    audioFile = file
-    result = resolve
-    self.flutterChannel = channel
+    do {
+      audioFile = try AVAudioFile(forReading: audioUrl)
+      result = resolve
+      self.flutterChannel = channel
+      print("Audio File Format: \(audioFile.fileFormat)")
+  } catch let error as NSError {
+      print("AVAudioFile error: \(error.localizedDescription)")
+      reject(Constants.audioWaveforms, "Failed to decode: \(error.localizedDescription)", error)
+      return
+  }
   }
 
   deinit {
