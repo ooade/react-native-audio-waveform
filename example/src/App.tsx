@@ -174,6 +174,7 @@ const RenderListItem = React.memo(
                 // );
               }}
               onChangeWaveformLoadState={state => {
+                console.log({ state });
                 setIsLoading(state === 'loading');
               }}
             />
