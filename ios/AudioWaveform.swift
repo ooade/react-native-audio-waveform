@@ -112,7 +112,7 @@ class AudioWaveform: RCTEventEmitter {
   func createOrUpdateExtractor(playerKey: String, path: String?, noOfSamples: Int?, resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
     if(!(path ?? "").isEmpty) {
       do {
-        let audioUrl = URL(fileURLWithPath: path!)
+        let audioUrl = URL.init(string: path!)
         if(audioUrl == nil){
           reject(Constants.audioWaveforms, "Failed to initialise Url from provided audio file If path contains `file://` try removing it", nil)
             return
