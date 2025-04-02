@@ -34,7 +34,6 @@ export interface StaticWaveform extends BaseWaveform {
   ) => void;
   onChangeWaveformLoadState?: (state: WaveFormLoadState) => void;
   playbackSpeed?: PlaybackSpeedType;
-  stopPlayerOnZeroProgress?: boolean;
 }
 
 export interface LiveWaveform extends BaseWaveform {
